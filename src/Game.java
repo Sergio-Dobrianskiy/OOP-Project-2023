@@ -25,6 +25,14 @@ public class Game extends Canvas implements Runnable{
 		new Window(WIDTH, HEIGHT, title, this);
 		start();
 		
+		init();
+		// Below here
+		handler.addObject(new Player(100, 100, ID.Player));
+		
+		
+	}
+	
+	private void init() {
 		handler = new Handler();
 	}
 	
@@ -89,7 +97,7 @@ public class Game extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();
 		
 		// Meat and Bones of our rendering 
-		g.setColor(Color.black);
+		g.setColor(Color.green);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		handler.render(g);
