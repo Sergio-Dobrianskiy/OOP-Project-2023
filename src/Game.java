@@ -16,11 +16,16 @@ public class Game extends Canvas implements Runnable{
 	private Thread thread;
 	private boolean isRunning = false;
 	
+	// Instances
+	private Handler handler;
+	
 	
 	public Game() {
 		//Construct
 		new Window(WIDTH, HEIGHT, title, this);
 		start();
+		
+		handler = new Handler();
 	}
 	
 	private synchronized void start() {
@@ -86,6 +91,8 @@ public class Game extends Canvas implements Runnable{
 		// Meat and Bones of our rendering 
 		g.setColor(Color.black);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		handler.render(g);
 		
 		bs.show();
 		g.dispose();
