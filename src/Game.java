@@ -1,6 +1,7 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable{
@@ -11,6 +12,7 @@ public class Game extends Canvas implements Runnable{
 	private static final long serialVersionUID = 1L;
 	
 	public static int WIDTH = 800, HEIGHT = 608;
+	public static int PLAYER_WIDTH = 100, PLAYER_HEIGHT = 100; 
 	public String title = "Zombie Game";
 	
 	private Thread thread;
@@ -20,6 +22,7 @@ public class Game extends Canvas implements Runnable{
 	private Handler handler;
 	private KeyInput input;
 	private MouseInput mInput;
+	private Camera cam;
 	
 	
 	public Game() {
@@ -39,8 +42,15 @@ public class Game extends Canvas implements Runnable{
 		mInput = new MouseInput(handler);
 		this.addKeyListener(input);
 		this.addMouseListener(mInput);
+		cam = new Camera(0, 0, handler);
 		
-		handler.addObject(new Player(100, 100, ID.Player, input));
+		handler.addObject(new Player(PLAYER_WIDTH, PLAYER_HEIGHT, ID.Player, input));
+		
+		handler.addObject(new Box(100, 100, ID.Block));
+		handler.addObject(new Box(200, 200, ID.Block));
+		handler.addObject(new Box(300, 300, ID.Block));
+		handler.addObject(new Box(400, 400, ID.Block));
+		
 		mInput.findPlayer();
 	}
 	
@@ -94,6 +104,7 @@ public class Game extends Canvas implements Runnable{
 	private void tick() {
 		// Updates the game
 		handler.tick();
+		cam.tick();
 	}
 	
 	private void render() {
@@ -104,13 +115,17 @@ public class Game extends Canvas implements Runnable{
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
+		Graphics2D g2d = (Graphics2D) g;
+		
 		
 		// Meat and Bones of our rendering 
 		g.setColor(Color.gray);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
+		g2d.translate(-cam.getX(), -cam.getY());
 		handler.render(g);
-		
+		g2d.translate(cam.getX(), cam.getY());
+
 		bs.show();
 		g.dispose();
 	}
