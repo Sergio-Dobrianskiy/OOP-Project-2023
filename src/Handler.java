@@ -7,8 +7,8 @@ public class Handler {
 	
 	public void tick() {
 		
-		for (GameObject tempObject : object) {
-			tempObject.tick();
+		for (int i = 0; i < object.size(); i++) {
+			object.get(i).tick();
 		}
 		
 	}
@@ -19,8 +19,9 @@ public class Handler {
 		}
 	}
 	
-	public void addObject(GameObject tempObject) {
+	public GameObject addObject(GameObject tempObject) {
 		object.add(tempObject);
+		return tempObject;
 	}
 	
 	public void removeObject(GameObject remObject) {

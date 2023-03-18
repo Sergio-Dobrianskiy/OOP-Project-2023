@@ -18,6 +18,8 @@ public class Game extends Canvas implements Runnable{
 	
 	// Instances
 	private Handler handler;
+	private KeyInput input;
+	private MouseInput mInput;
 	
 	
 	public Game() {
@@ -26,14 +28,20 @@ public class Game extends Canvas implements Runnable{
 		start();
 		
 		init();
-		// Below here
-		handler.addObject(new Player(100, 100, ID.Player));
+		
 		
 		
 	}
 	
 	private void init() {
 		handler = new Handler();
+		input = new KeyInput();
+		mInput = new MouseInput(handler);
+		this.addKeyListener(input);
+		this.addMouseListener(mInput);
+		
+		handler.addObject(new Player(100, 100, ID.Player, input));
+		mInput.findPlayer();
 	}
 	
 	private synchronized void start() {
@@ -98,7 +106,7 @@ public class Game extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();
 		
 		// Meat and Bones of our rendering 
-		g.setColor(Color.green);
+		g.setColor(Color.gray);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		handler.render(g);
