@@ -27,8 +27,10 @@ public class Camera {
 	
 	public void tick() {
 		if (tempPlayer != null) {
-			x = (int) tempPlayer.x - Game.WIDTH / 2 + Game.PLAYER_WIDTH / 2; //sistemare i valori
-			y = (int) tempPlayer.y - Game.HEIGHT / 2 + Game.PLAYER_HEIGHT / 2;;
+//			x = (int) tempPlayer.x - Game.WIDTH / 2 + Game.PLAYER_WIDTH / 2; //sistemare i valori
+//			y = (int) tempPlayer.y - Game.HEIGHT / 2 + Game.PLAYER_HEIGHT / 2;;
+			x = (int) tempPlayer.x - Game.WIDTH / 2;
+			y = (int) tempPlayer.y - Game.HEIGHT / 2;
 		} else {
 			findPlayer();
 		}

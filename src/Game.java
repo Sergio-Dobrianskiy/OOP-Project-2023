@@ -39,10 +39,10 @@ public class Game extends Canvas implements Runnable{
 	private void init() {
 		handler = new Handler();
 		input = new KeyInput();
-		mInput = new MouseInput(handler);
+		cam = new Camera(0, 0, handler);
+		mInput = new MouseInput(handler, cam);
 		this.addKeyListener(input);
 		this.addMouseListener(mInput);
-		cam = new Camera(0, 0, handler);
 		
 		handler.addObject(new Player(PLAYER_WIDTH, PLAYER_HEIGHT, ID.Player, input));
 		

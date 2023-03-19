@@ -17,10 +17,11 @@ public class Player extends GameObject {
 		x += velX;
 		y += velY;
 		
-		if (x > Game.WIDTH) x = 0;
-		if (y > Game.HEIGHT) y = 0;
-		if (x < 0) x = Game.WIDTH;
-		if (y < 0) y = Game.HEIGHT;
+		// reset se tocca i bordi dello schermo
+//		if (x > Game.WIDTH) x = 0;
+//		if (y > Game.HEIGHT) y = 0;
+//		if (x < 0) x = Game.WIDTH;
+//		if (y < 0) y = Game.HEIGHT;
 		
 		// horizontal movement
 		//keys 0 = true right
