@@ -1,13 +1,14 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
-public class Player extends GameObject {
+public class Wizard extends GameObject {
 
 	private float _acc = 1f;
 	private float _dcc = 0.5f;
 	private KeyInput input;
 	
-	public Player(float x, float y, ID id, KeyInput input) {
+	public Wizard(float x, float y, ID id, KeyInput input) {
 		super(x, y, id);
 		this.input = input;
 	}
@@ -23,7 +24,7 @@ public class Player extends GameObject {
 //		if (x < 0) x = Game.WIDTH;
 //		if (y < 0) y = Game.HEIGHT;
 		
-		// horizontal movement
+		//// horizontal movement
 		//keys 0 = true right
 		//keys 1 = true left
 		if (input.keys[0]) {
@@ -35,7 +36,7 @@ public class Player extends GameObject {
 			else if (velX < 0) velX += _dcc;
 		}
 		
-		// vertical movement
+		//// vertical movement
 		//keys 2 = true up
 		//keys 3 = true down
 		if (input.keys[2]) {
@@ -64,8 +65,13 @@ public class Player extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.black);
+		g.setColor(Color.blue);
 		g.fillRect((int)x, (int)y, 32, 32);
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle((int)x, (int)y, 32, 32);
 	}
 
 

@@ -3,39 +3,41 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
-public class Game extends Canvas implements Runnable{
+public class Game extends Canvas implements Runnable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	public static int WIDTH = 800, HEIGHT = 608;
-	public static int PLAYER_WIDTH = 100, PLAYER_HEIGHT = 100; 
-	public String title = "Zombie Game";
-	
+
+	public static int WIDTH = 1000, HEIGHT = 563;
+	public static int PLAYER_WIDTH = 100, PLAYER_HEIGHT = 100;
+	public String title = "Wizard Game";
+
 	private Thread thread;
 	private boolean isRunning = false;
-	
+
 	// Instances
 	private Handler handler;
+	private BufferedImage level = null;
 	private KeyInput input;
 	private MouseInput mInput;
 	private Camera cam;
-	
-	
+
 	public Game() {
-		//Construct
+		// Construct
 		new Window(WIDTH, HEIGHT, title, this);
-		start();
-		
+
+		// prima carico il gioco
 		init();
-		
-		
-		
+		// poi faccio partire i thread
+		start();
+
 	}
-	
+
 	private void init() {
 		handler = new Handler();
 		input = new KeyInput();
@@ -43,29 +45,35 @@ public class Game extends Canvas implements Runnable{
 		mInput = new MouseInput(handler, cam);
 		this.addKeyListener(input);
 		this.addMouseListener(mInput);
-		
-		handler.addObject(new Player(PLAYER_WIDTH, PLAYER_HEIGHT, ID.Player, input));
-		
-		handler.addObject(new Box(100, 100, ID.Block));
-		handler.addObject(new Box(200, 200, ID.Block));
-		handler.addObject(new Box(300, 300, ID.Block));
-		handler.addObject(new Box(400, 400, ID.Block));
-		
+
+		BufferedImageLoader loader = new BufferedImageLoader();
+		level = loader.loadImage("wizard_level.png");
+		loadLevel(level);
+
+//		handler.addObject(new Wizard(PLAYER_WIDTH, PLAYER_HEIGHT, ID.Player, input));
+
+//		handler.addObject(new Box(100, 100, ID.Block));
+//		handler.addObject(new Block(200, 200, ID.Block));
+//		handler.addObject(new Box(300, 300, ID.Block));
+//		handler.addObject(new Box(400, 400, ID.Block));
+
 		mInput.findPlayer();
 	}
-	
+
 	private synchronized void start() {
-		if (isRunning) return;
-		
+		if (isRunning)
+			return;
+
 		thread = new Thread(this);
 		thread.start();
 		isRunning = true;
-		
+
 	}
-	
+
 	private synchronized void stop() {
-		if ( ! isRunning) return;
-		
+		if (!isRunning)
+			return;
+
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
@@ -73,9 +81,10 @@ public class Game extends Canvas implements Runnable{
 		}
 		isRunning = false;
 	}
-	
+
 	@Override
 	public void run() {
+		// minecraft game loop
 		this.requestFocus(); // cosa fa?
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60.0;
@@ -83,53 +92,89 @@ public class Game extends Canvas implements Runnable{
 		double delta = 0;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
-		while(isRunning) {
+		while (isRunning) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
-			while(delta >= 1) {
+			while (delta >= 1) {
 				tick();
 				delta--;
 			}
 			render();
 			frames++;
-			
-			if (System.currentTimeMillis() - timer > 1000 ) {
+
+			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				frames = 0;
 			}
 		}
 	}
-	
+
 	private void tick() {
-		// Updates the game
+		// Updates the game, updates 1000-2000 times per second
 		handler.tick();
 		cam.tick();
 	}
-	
+
 	private void render() {
-		// Renders the game
+		// Renders the game, updates 60 times per second
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
-			this.createBufferStrategy(3); 
+			this.createBufferStrategy(3);
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
+		//////////// after here we draw to the game
+
 		Graphics2D g2d = (Graphics2D) g;
-		
-		
-		// Meat and Bones of our rendering 
+
+		// Meat and Bones of our rendering
 		g.setColor(Color.gray);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		
+
 		g2d.translate(-cam.getX(), -cam.getY());
 		handler.render(g);
 		g2d.translate(cam.getX(), cam.getY());
 
 		bs.show();
+
+		//////////// above here we draw to the game
 		g.dispose();
 	}
-	
+
+	// loading the level
+	private void loadLevel(BufferedImage image) {
+		int w = image.getWidth();
+		int h = image.getHeight();
+		System.out.println("w"+w+"h"+h);
+
+		for (int xx = 0; xx < w; xx++) {
+			for (int yy = 0; yy < h; yy++) {
+				int pixel = image.getRGB(xx, yy);
+				
+				int red = (pixel >> 16) & 0xff;
+				int green = (pixel >> 8) & 0xff;
+				int blue = (pixel) & 0xff;
+
+				if (red > 250) {
+					handler.addObject(new Block((int) xx * 32, (int) yy * 32, ID.Block));
+					System.out.print("o");
+				}
+				if (blue > 250) {
+					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input));
+					System.out.print("B");
+				}
+//				if (red == 255) {
+//					handler.addObject(new Block((int) xx * 32, (int) xx * 32, ID.Block));
+//				}
+				if (red == 0 && blue == 0 && green == 0) {
+					System.out.print(" ");
+				}
+			}
+			System.out.println("");
+		}
+	}
+
 	public static void main(String args[]) {
 		new Game();
 	}

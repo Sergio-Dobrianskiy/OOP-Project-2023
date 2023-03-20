@@ -31,6 +31,8 @@ public class Camera {
 //			y = (int) tempPlayer.y - Game.HEIGHT / 2 + Game.PLAYER_HEIGHT / 2;;
 			x = (int) tempPlayer.x - Game.WIDTH / 2;
 			y = (int) tempPlayer.y - Game.HEIGHT / 2;
+//			x = 0;
+//			y = 0;
 		} else {
 			findPlayer();
 		}
