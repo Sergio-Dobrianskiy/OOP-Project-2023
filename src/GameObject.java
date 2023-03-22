@@ -7,6 +7,7 @@ public abstract class GameObject {
 	protected float velX, velY;
 	protected ID id;
 	
+	// TODO: aggiungere Handler handler
 	public GameObject(float x, float y, ID id) {
 		this.x = x;
 		this.y = y;

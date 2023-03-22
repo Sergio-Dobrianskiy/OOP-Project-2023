@@ -35,6 +35,7 @@ public class Game extends Canvas implements Runnable {
 		init();
 		// poi faccio partire i thread
 		start();
+		
 
 	}
 
@@ -124,6 +125,7 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
+		
 		//////////// after here we draw to the game
 
 		Graphics2D g2d = (Graphics2D) g;
@@ -146,7 +148,7 @@ public class Game extends Canvas implements Runnable {
 	private void loadLevel(BufferedImage image) {
 		int w = image.getWidth();
 		int h = image.getHeight();
-		System.out.println("w"+w+"h"+h);
+//		System.out.println("w"+w+"h"+h);
 
 		for (int xx = 0; xx < w; xx++) {
 			for (int yy = 0; yy < h; yy++) {
@@ -161,7 +163,7 @@ public class Game extends Canvas implements Runnable {
 					System.out.print("o");
 				}
 				if (blue > 250) {
-					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input));
+					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input, handler));
 					System.out.print("B");
 				}
 //				if (red == 255) {

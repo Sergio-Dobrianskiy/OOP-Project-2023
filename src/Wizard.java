@@ -7,16 +7,20 @@ public class Wizard extends GameObject {
 	private float _acc = 1f;
 	private float _dcc = 0.5f;
 	private KeyInput input;
+	private Handler handler;
 	
-	public Wizard(float x, float y, ID id, KeyInput input) {
+	public Wizard(float x, float y, ID id, KeyInput input, Handler handler) {
 		super(x, y, id);
 		this.input = input;
+		this.handler = handler;
 	}
 
 	@Override
 	public void tick() {
 		x += velX;
 		y += velY;
+		
+		collision();
 		
 		// reset se tocca i bordi dello schermo
 //		if (x > Game.WIDTH) x = 0;
@@ -61,6 +65,18 @@ public class Wizard extends GameObject {
 			value = min;
 		}
 		return value;
+	}
+	
+	private void collision() {
+		for (int i = 0; i < handler.object.size(); i++) {
+			GameObject tempObject = handler.object.get(i);
+			if (tempObject.getId() == ID.Block) {
+				if (getBounds().intersects(tempObject.getBounds())) {
+					x += velX * -1;
+					y += velY * -1;
+				}
+			}
+		}
 	}
 
 	@Override
