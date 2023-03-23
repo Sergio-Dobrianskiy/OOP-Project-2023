@@ -53,6 +53,7 @@ public class Game extends Canvas implements Runnable {
 		input = new KeyInput();
 		cam = new Camera(0, 0, handler);
 		this.addKeyListener(input);
+		mInput = new MouseInput(handler, cam, this, ss);
 		this.addMouseListener(mInput);
 
 		BufferedImageLoader loader = new BufferedImageLoader();
@@ -63,19 +64,10 @@ public class Game extends Canvas implements Runnable {
 		
 		floor = ss.grabImage(4, 2, 32, 32);
 		
-		mInput = new MouseInput(handler, cam, this, ss);
 		
 		loadLevel(level);
 		
 		
-		
-
-//		handler.addObject(new Wizard(PLAYER_WIDTH, PLAYER_HEIGHT, ID.Player, input));
-
-//		handler.addObject(new Box(100, 100, ID.Block));
-//		handler.addObject(new Block(200, 200, ID.Block));
-//		handler.addObject(new Box(300, 300, ID.Block));
-//		handler.addObject(new Box(400, 400, ID.Block));
 
 		mInput.findPlayer();
 	}
