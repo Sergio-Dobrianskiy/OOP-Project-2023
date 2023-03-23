@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Enemy extends GameObject {
@@ -10,13 +10,15 @@ public class Enemy extends GameObject {
 	private Random r;
 	private int choose = 0;
 	private int hp;
+	private BufferedImage enemy_image;
 	
 
-	public Enemy(float x, float y, ID id, Handler handler) {
-		super(x, y, id);
+	public Enemy(float x, float y, ID id, Handler handler, SpriteSheet ss) {
+		super(x, y, id, ss);
 		this.handler = handler;
 		r = new Random();
 		this.hp = 100;
+		enemy_image = ss.grabImage(4, 1, 32, 32);
 	}
 
 	@Override
@@ -63,12 +65,13 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.yellow);
-		g.fillRect((int) x, (int) y, 32, 32);
+//		g.setColor(Color.yellow);
+//		g.fillRect((int) x, (int) y, 32, 32);
 		
 //		Graphics2D g2d = (Graphics2D) g;
 //		g.setColor(Color.green);
 //		g2d.draw(getBoundsBig());
+		g.drawImage(enemy_image, (int) x, (int) y, null);
 	}
 
 	@Override

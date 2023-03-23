@@ -6,8 +6,8 @@ public class Bullet extends GameObject {
 	
 	private Handler handler;
 
-	public Bullet(float x, float y, ID id, Handler handler) {
-		super(x, y, id);
+	public Bullet(float x, float y, ID id, Handler handler, SpriteSheet ss) {
+		super(x, y, id, ss);
 		this.handler = handler;
 	}
 

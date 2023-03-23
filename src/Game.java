@@ -22,12 +22,17 @@ public class Game extends Canvas implements Runnable {
 
 	// Instances
 	private Handler handler;
-	private BufferedImage level = null;
 	private KeyInput input;
 	private MouseInput mInput;
 	private Camera cam;
+	private SpriteSheet ss;
 	
 	public int ammo;
+	
+	private BufferedImage level = null;
+	private BufferedImage sprite_sheet = null;
+	private BufferedImage floor = null;
+	
 
 	public Game() {
 		// Construct
@@ -47,13 +52,23 @@ public class Game extends Canvas implements Runnable {
 		handler = new Handler();
 		input = new KeyInput();
 		cam = new Camera(0, 0, handler);
-		mInput = new MouseInput(handler, cam, this);
 		this.addKeyListener(input);
 		this.addMouseListener(mInput);
 
 		BufferedImageLoader loader = new BufferedImageLoader();
 		level = loader.loadImage("wizard_level.png");
+		sprite_sheet = loader.loadImage("sprite_sheet.png");
+		
+		ss = new SpriteSheet(sprite_sheet);
+		
+		floor = ss.grabImage(4, 2, 32, 32);
+		
+		mInput = new MouseInput(handler, cam, this, ss);
+		
 		loadLevel(level);
+		
+		
+		
 
 //		handler.addObject(new Wizard(PLAYER_WIDTH, PLAYER_HEIGHT, ID.Player, input));
 
@@ -135,10 +150,19 @@ public class Game extends Canvas implements Runnable {
 		Graphics2D g2d = (Graphics2D) g;
 
 		// Meat and Bones of our rendering
-		g.setColor(Color.gray);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+//		g.setColor(Color.gray);
+//		g.fillRect(0, 0, WIDTH, HEIGHT);
 
 		g2d.translate(-cam.getX(), -cam.getY());
+		
+		// sprite pavimento
+		for (int xx = 0; xx < 30 * 72; xx += 32) {
+			for (int yy = 0; yy < 30 * 72; yy += 32) {
+				g.drawImage(floor, xx, yy, null);
+			}
+		}
+		
+		
 		handler.render(g);
 		g2d.translate(cam.getX(), cam.getY());
 
@@ -163,15 +187,15 @@ public class Game extends Canvas implements Runnable {
 				int blue = (pixel) & 0xff;
 
 				if (red > 250 && blue == 0 && green == 0) {
-					handler.addObject(new Block((int) xx * 32, (int) yy * 32, ID.Block));
+					handler.addObject(new Block((int) xx * 32, (int) yy * 32, ID.Block, ss));
 					System.out.print("o");
 				}
 				if (red == 0 && blue >= 250 && green == 0) {
-					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input, handler, this));
+					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input, handler, this, ss));
 					System.out.print("B");
 				}
 				if (red == 0 && blue == 0 && green >= 255) {
-					handler.addObject(new Enemy((int) xx * 32, (int) yy * 32, ID.Enemy, handler));
+					handler.addObject(new Enemy((int) xx * 32, (int) yy * 32, ID.Enemy, handler, ss));
 					System.out.print("e");
 				}
 				if (red == 0 && blue == 0 && green == 0) {
@@ -179,7 +203,7 @@ public class Game extends Canvas implements Runnable {
 				}
 				
 				if (red == 0 && blue > 250 && green >= 250) {
-					handler.addObject(new Crate((int) xx * 32, (int) yy * 32, ID.Crate));
+					handler.addObject(new Crate((int) xx * 32, (int) yy * 32, ID.Crate, ss));
 					System.out.print("C");
 				}
 			}

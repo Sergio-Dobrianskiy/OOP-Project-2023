@@ -7,13 +7,17 @@ public class MouseInput extends MouseAdapter {
 	private Camera cam;
 	private GameObject tempPlayer = null;
 	private Game game;
+	private SpriteSheet ss;
 
 	
-	public MouseInput(Handler handler, Camera cam, Game game) {
+	public MouseInput(Handler handler, Camera cam, Game game, SpriteSheet ss) {
 		this.handler = handler;
 		this.cam = cam;
 		this.game = game;
+		this.ss = ss;
 	}
+	
+	
 	
 	public void findPlayer() {
 		for (int i = 0; i < handler.object.size(); i++) {
@@ -29,7 +33,7 @@ public class MouseInput extends MouseAdapter {
 		int my = e.getY();
 		
 		if (tempPlayer != null && game.ammo > 0) {
-			GameObject tempBullet = handler.addObject(new Bullet(tempPlayer.x + 16, tempPlayer.y + 16, ID.Bullet, handler));			
+			GameObject tempBullet = handler.addObject(new Bullet(tempPlayer.x + 16, tempPlayer.y + 16, ID.Bullet, handler, ss));			
 			
 			float angle = (float) Math.atan2(my - tempPlayer.y - 16 + cam.getY(), mx - tempPlayer.x - 16 + cam.getX());
 			int bulletVelocity = 10;
