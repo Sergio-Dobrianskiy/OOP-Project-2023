@@ -28,6 +28,7 @@ public class Game extends Canvas implements Runnable {
 	private SpriteSheet ss;
 	
 	public int ammo;
+	public int hp;
 	
 	private BufferedImage level = null;
 	private BufferedImage sprite_sheet = null;
@@ -44,6 +45,7 @@ public class Game extends Canvas implements Runnable {
 		start();
 		
 		this.ammo = 100;
+		this.hp = 100;
 		
 
 	}
@@ -156,11 +158,21 @@ public class Game extends Canvas implements Runnable {
 		
 		
 		handler.render(g);
+		
+		
 		g2d.translate(cam.getX(), cam.getY());
-
-		bs.show();
-
+		g.setColor(Color.black);
+		g.fillRect(2,  1,  206,  38);
+		g.setColor(Color.gray);
+		g.fillRect(5,  5,  200,  32);
+		g.setColor(Color.green);
+		g.fillRect(5,  5,  this.hp * 2,  32);
+		
+		g.setColor(Color.white);
+		g.drawString("Ammo: " + ammo, 5, 50);
 		//////////// above here we draw to the game
+		
+		bs.show();
 		g.dispose();
 	}
 
