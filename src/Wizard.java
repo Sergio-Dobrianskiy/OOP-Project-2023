@@ -10,14 +10,19 @@ public class Wizard extends GameObject {
 	private KeyInput input;
 	private Handler handler;
 	private Game game;
-	private BufferedImage wizard_image;
+	private BufferedImage[] wizard_image;
+	Animation anim;
 	
 	public Wizard(float x, float y, ID id, KeyInput input, Handler handler, Game game, SpriteSheet ss) {
 		super(x, y, id, ss);
 		this.input = input;
 		this.handler = handler;
 		this.game = game;
-		wizard_image = ss.grabImage(1, 1, 32, 48);
+		this.wizard_image = new BufferedImage[3];
+		this.wizard_image[0] = ss.grabImage(1, 1, 32, 48);
+		this.wizard_image[1] = ss.grabImage(2, 1, 32, 48);
+		this.wizard_image[2] = ss.grabImage(3, 1, 32, 48);
+		anim = new Animation(3, wizard_image[0], wizard_image[1], wizard_image[2]);
 	}
 
 	@Override
@@ -60,6 +65,8 @@ public class Wizard extends GameObject {
 		velX = clamp(velX, 5, -5);
 		velY = clamp(velY, 5, -5);
 		
+		anim.runAnimation();
+		
 	}
 	
 	private float clamp(float value, float max, float min) {
@@ -94,7 +101,11 @@ public class Wizard extends GameObject {
 	public void render(Graphics g) {
 //		g.setColor(Color.blue);
 //		g.fillRect((int)x, (int)y, 32, 32);
-		g.drawImage(wizard_image, (int) x, (int) y, null);
+		if (velX == 0 && velY == 0) {
+			g.drawImage(wizard_image[0], (int) x, (int) y, null);
+		} else {
+			anim.drawAnimation(g, x, y, 0);
+		}
 	}
 
 	@Override

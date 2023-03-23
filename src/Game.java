@@ -57,7 +57,7 @@ public class Game extends Canvas implements Runnable {
 
 		BufferedImageLoader loader = new BufferedImageLoader();
 		level = loader.loadImage("wizard_level.png");
-		sprite_sheet = loader.loadImage("sprite_sheet.png");
+		sprite_sheet = loader.loadImage("sprite_sheet2.png");
 		
 		ss = new SpriteSheet(sprite_sheet);
 		

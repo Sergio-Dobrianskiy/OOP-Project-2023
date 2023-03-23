@@ -10,7 +10,8 @@ public class Enemy extends GameObject {
 	private Random r;
 	private int choose = 0;
 	private int hp;
-	private BufferedImage enemy_image;
+	private BufferedImage[] enemy_image;
+	Animation anim;
 	
 
 	public Enemy(float x, float y, ID id, Handler handler, SpriteSheet ss) {
@@ -18,7 +19,13 @@ public class Enemy extends GameObject {
 		this.handler = handler;
 		r = new Random();
 		this.hp = 100;
-		enemy_image = ss.grabImage(4, 1, 32, 32);
+//		enemy_image = ss.grabImage(4, 1, 32, 32);
+		this.enemy_image = new BufferedImage[3];
+		this.enemy_image[0] = ss.grabImage(4, 1, 32, 32);
+		this.enemy_image[1] = ss.grabImage(5, 1, 32, 32);
+		this.enemy_image[2] = ss.grabImage(6, 1, 32, 32);
+		anim = new Animation(3, enemy_image[0], enemy_image[1], enemy_image[2]);
+
 	}
 
 	@Override
@@ -60,6 +67,7 @@ public class Enemy extends GameObject {
 			handler.removeObject(this);
 		}
 		
+		anim.runAnimation();
 		
 	}
 
@@ -71,7 +79,8 @@ public class Enemy extends GameObject {
 //		Graphics2D g2d = (Graphics2D) g;
 //		g.setColor(Color.green);
 //		g2d.draw(getBoundsBig());
-		g.drawImage(enemy_image, (int) x, (int) y, null);
+//		g.drawImage(enemy_image, (int) x, (int) y, null);
+		anim.drawAnimation(g, x, y, 0);
 	}
 
 	@Override
