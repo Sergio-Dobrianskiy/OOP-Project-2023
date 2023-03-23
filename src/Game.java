@@ -26,6 +26,8 @@ public class Game extends Canvas implements Runnable {
 	private KeyInput input;
 	private MouseInput mInput;
 	private Camera cam;
+	
+	public int ammo;
 
 	public Game() {
 		// Construct
@@ -36,6 +38,8 @@ public class Game extends Canvas implements Runnable {
 		// poi faccio partire i thread
 		start();
 		
+		this.ammo = 100;
+		
 
 	}
 
@@ -43,7 +47,7 @@ public class Game extends Canvas implements Runnable {
 		handler = new Handler();
 		input = new KeyInput();
 		cam = new Camera(0, 0, handler);
-		mInput = new MouseInput(handler, cam);
+		mInput = new MouseInput(handler, cam, this);
 		this.addKeyListener(input);
 		this.addMouseListener(mInput);
 
@@ -158,20 +162,25 @@ public class Game extends Canvas implements Runnable {
 				int green = (pixel >> 8) & 0xff;
 				int blue = (pixel) & 0xff;
 
-				if (red > 250) {
+				if (red > 250 && blue == 0 && green == 0) {
 					handler.addObject(new Block((int) xx * 32, (int) yy * 32, ID.Block));
 					System.out.print("o");
 				}
-				if (blue > 250) {
-					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input, handler));
+				if (red == 0 && blue >= 250 && green == 0) {
+					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input, handler, this));
 					System.out.print("B");
 				}
-				if (green == 255) {
+				if (red == 0 && blue == 0 && green >= 255) {
 					handler.addObject(new Enemy((int) xx * 32, (int) yy * 32, ID.Enemy, handler));
 					System.out.print("e");
 				}
 				if (red == 0 && blue == 0 && green == 0) {
 					System.out.print(" ");
+				}
+				
+				if (red == 0 && blue > 250 && green >= 250) {
+					handler.addObject(new Crate((int) xx * 32, (int) yy * 32, ID.Crate));
+					System.out.print("C");
 				}
 			}
 			System.out.println("");

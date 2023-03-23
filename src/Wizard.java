@@ -8,11 +8,13 @@ public class Wizard extends GameObject {
 	private float _dcc = 0.5f;
 	private KeyInput input;
 	private Handler handler;
+	private Game game;
 	
-	public Wizard(float x, float y, ID id, KeyInput input, Handler handler) {
+	public Wizard(float x, float y, ID id, KeyInput input, Handler handler, Game game) {
 		super(x, y, id);
 		this.input = input;
 		this.handler = handler;
+		this.game = game;
 	}
 
 	@Override
@@ -74,6 +76,12 @@ public class Wizard extends GameObject {
 				if (getBounds().intersects(tempObject.getBounds())) {
 					x += velX * -1;
 					y += velY * -1;
+				}
+			}
+			if (tempObject.getId() == ID.Crate) {
+				if (getBounds().intersects(tempObject.getBounds())) {
+					game.ammo += 10;
+					handler.removeObject(tempObject);
 				}
 			}
 		}
