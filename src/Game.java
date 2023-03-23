@@ -166,9 +166,10 @@ public class Game extends Canvas implements Runnable {
 					handler.addObject(new Wizard((int) xx * 32, (int) yy * 32, ID.Player, input, handler));
 					System.out.print("B");
 				}
-//				if (red == 255) {
-//					handler.addObject(new Block((int) xx * 32, (int) xx * 32, ID.Block));
-//				}
+				if (green == 255) {
+					handler.addObject(new Enemy((int) xx * 32, (int) yy * 32, ID.Enemy, handler));
+					System.out.print("e");
+				}
 				if (red == 0 && blue == 0 && green == 0) {
 					System.out.print(" ");
 				}
