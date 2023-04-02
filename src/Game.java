@@ -34,6 +34,9 @@ public class Game extends Canvas implements Runnable {
 	private BufferedImage sprite_sheet = null;
 	private BufferedImage floor = null;
 	
+	// guns
+	private AutoGun autoGun;
+	
 
 	public Game() {
 		// Construct
@@ -56,6 +59,7 @@ public class Game extends Canvas implements Runnable {
 		cam = new Camera(0, 0, handler);
 		this.addKeyListener(input);
 		mInput = new MouseInput(handler, cam, this, ss);
+		autoGun = new AutoGun(0,0, ID.Gun, handler, ss, this, cam);
 		this.addMouseListener(mInput);
 
 		BufferedImageLoader loader = new BufferedImageLoader();
@@ -128,6 +132,7 @@ public class Game extends Canvas implements Runnable {
 		// Updates the game, updates 1000-2000 times per second
 		handler.tick();
 		cam.tick();
+		autoGun.tick();
 	}
 
 	private void render() {
