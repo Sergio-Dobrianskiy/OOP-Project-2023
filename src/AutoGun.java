@@ -6,12 +6,14 @@ import java.awt.geom.Point2D;
 public class AutoGun extends GameObject {
 	
 	private Handler handler;
-	private int autoGunLvl = 0;
-	private GameObject tempPlayer;
-	private GameObject closestEnemy;
 	private Game game;
 	private Camera cam;
 	private SpriteSheet ss;
+	
+	private int autoGunLvl;
+	private GameObject tempPlayer;
+	private GameObject closestEnemy;
+	
 	private double delta;
 	private boolean secondaryShooting;
 	private boolean tertiaryShooting;
@@ -27,6 +29,7 @@ public class AutoGun extends GameObject {
 		this.cam = cam;
 		this.ss = ss;
 		this.lastTime = System.nanoTime();
+		this.autoGunLvl = 1;
 		this.delta = 0;
 		this.secondaryShooting = false;
 		this.tertiaryShooting = false;
@@ -110,11 +113,11 @@ public class AutoGun extends GameObject {
 					this.shoot();
 					
 					
-					if (autoGunLvl >= 0) {				// TODO: sistemare
+					if (autoGunLvl >= 2) {				// TODO: sistemare
 						this.secondaryShooting = true;
 					}
 					
-					if (autoGunLvl >= 0) {				// TODO: sistemare
+					if (autoGunLvl >= 3) {				// TODO: sistemare
 						this.tertiaryShooting = true;
 					}
 					
@@ -131,7 +134,6 @@ public class AutoGun extends GameObject {
 		
 		GameObject tempBullet = handler.addObject(new Bullet(tempPlayer.x + 16, tempPlayer.y + 16, ID.Bullet, handler, ss));			
 		
-//		float angle = (float) Math.atan2(my - tempPlayer.y - 16 + cam.getY(), mx - tempPlayer.x - 16 + cam.getX());
 		float angle = (float) Math.atan2(my - tempPlayer.y - 16, mx - tempPlayer.x - 16);
 		int bulletVelocity = 10;
 		tempBullet.velX = (float) ((bulletVelocity) * Math.cos(angle));

@@ -36,6 +36,7 @@ public class Game extends Canvas implements Runnable {
 	
 	// guns
 	private AutoGun autoGun;
+	private OrbitGun orbitGun;
 	
 
 	public Game() {
@@ -59,7 +60,6 @@ public class Game extends Canvas implements Runnable {
 		cam = new Camera(0, 0, handler);
 		this.addKeyListener(input);
 		mInput = new MouseInput(handler, cam, this, ss);
-		autoGun = new AutoGun(0,0, ID.Gun, handler, ss, this, cam);
 		this.addMouseListener(mInput);
 
 		BufferedImageLoader loader = new BufferedImageLoader();
@@ -76,6 +76,8 @@ public class Game extends Canvas implements Runnable {
 		
 
 		mInput.findPlayer();
+		autoGun = new AutoGun(0,0, ID.Gun, handler, ss, this, cam);
+		orbitGun = new OrbitGun(0,0, ID.Gun, handler, ss, this, cam);
 	}
 
 	private synchronized void start() {
@@ -133,6 +135,7 @@ public class Game extends Canvas implements Runnable {
 		handler.tick();
 		cam.tick();
 		autoGun.tick();
+		orbitGun.tick();
 	}
 
 	private void render() {
