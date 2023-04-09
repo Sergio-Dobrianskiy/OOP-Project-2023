@@ -12,6 +12,9 @@ public class AutoGun extends GameObject {
 	private Game game;
 	private Camera cam;
 	private SpriteSheet ss;
+	private double delta;
+	private boolean secondaryShooting;
+	private boolean tertiaryShooting;
 	
 	private long lastTime;
 	private float closestEnemyDistance;
@@ -24,27 +27,9 @@ public class AutoGun extends GameObject {
 		this.cam = cam;
 		this.ss = ss;
 		this.lastTime = System.nanoTime();
-	}
-
-	
-	public void mousePressed(MouseEvent e) {
-		int mx = e.getX();
-		int my = e.getY();
-		
-		if (tempPlayer != null && game.ammo > 0) {
-			GameObject tempBullet = handler.addObject(new Bullet(tempPlayer.x + 16, tempPlayer.y + 16, ID.Bullet, handler, ss));			
-			
-			float angle = (float) Math.atan2(my - tempPlayer.y - 16 + cam.getY(), mx - tempPlayer.x - 16 + cam.getX());
-			int bulletVelocity = 10;
-			tempBullet.velX = (float) ((bulletVelocity) * Math.cos(angle));
-			tempBullet.velY = (float) ((bulletVelocity) * Math.sin(angle));
-			
-			game.ammo--;
-			
-		} else {
-			findPlayer();
-		}
-		
+		this.delta = 0;
+		this.secondaryShooting = false;
+		this.tertiaryShooting = false;
 	}
 	
 	public void findClosestEnemy( ) {
@@ -95,35 +80,62 @@ public class AutoGun extends GameObject {
 		double amountOfTicks = 60.0;
 		double second = 1000000000;
 		double ns = 1000000000 / amountOfTicks;
-		double delta = 0;
-//		long timer = System.currentTimeMillis();
-		if (autoGunLvl >= 0) { // TODO: sistemare
+		
+//		this.delta = 0;
+
+		
+		if (autoGunLvl >= 0) { 							// TODO: sistemare
 			long now = System.nanoTime();
-			delta = (now - this.lastTime) / second;
-			if (delta >= 1) {
+			this.delta = (now - this.lastTime) / second;
+			
+			
+			if (this.delta > 0.1 && this.secondaryShooting == true) {
+				this.shoot();
+				this.secondaryShooting = false;
+			}
+			
+			if (this.delta > 0.2 && this.tertiaryShooting == true) {
+				this.shoot();
+				this.tertiaryShooting = false;
+			}
+			
+			if (this.delta >= 1) {
 				this.lastTime = now;
 				this.findPlayer();
 				this.findClosestEnemy();
-				System.out.println("distance" + this.closestEnemyDistance);
+				System.out.println("distance: " + this.closestEnemyDistance);
 				
 				
 				if (this.closestEnemyDistance <= 400) {
+					this.shoot();
 					
-					int mx = (int) this.closestEnemy.getX();
-					int my = (int) this.closestEnemy.getY();
 					
-					GameObject tempBullet = handler.addObject(new Bullet(tempPlayer.x + 16, tempPlayer.y + 16, ID.Bullet, handler, ss));			
+					if (autoGunLvl >= 0) {				// TODO: sistemare
+						this.secondaryShooting = true;
+					}
 					
-//					float angle = (float) Math.atan2(my - tempPlayer.y - 16 + cam.getY(), mx - tempPlayer.x - 16 + cam.getX());
-					float angle = (float) Math.atan2(my - tempPlayer.y - 16, mx - tempPlayer.x - 16);
-					int bulletVelocity = 10;
-					tempBullet.velX = (float) ((bulletVelocity) * Math.cos(angle));
-					tempBullet.velY = (float) ((bulletVelocity) * Math.sin(angle));
+					if (autoGunLvl >= 0) {				// TODO: sistemare
+						this.tertiaryShooting = true;
+					}
 					
 				}
 				
 			}
 		}
+	}
+	
+	
+	private void shoot() {
+		int mx = (int) this.closestEnemy.getX();
+		int my = (int) this.closestEnemy.getY();
+		
+		GameObject tempBullet = handler.addObject(new Bullet(tempPlayer.x + 16, tempPlayer.y + 16, ID.Bullet, handler, ss));			
+		
+//		float angle = (float) Math.atan2(my - tempPlayer.y - 16 + cam.getY(), mx - tempPlayer.x - 16 + cam.getX());
+		float angle = (float) Math.atan2(my - tempPlayer.y - 16, mx - tempPlayer.x - 16);
+		int bulletVelocity = 10;
+		tempBullet.velX = (float) ((bulletVelocity) * Math.cos(angle));
+		tempBullet.velY = (float) ((bulletVelocity) * Math.sin(angle));
 	}
 
 	@Override
