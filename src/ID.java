@@ -7,6 +7,7 @@ public enum ID {
 	Zombie(),
 	Block(),
 	Bullet(),
+	IBullet(),
 	Gun();
 	
 }

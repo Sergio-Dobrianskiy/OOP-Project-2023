@@ -48,7 +48,7 @@ public class Enemy extends GameObject {
 				}
 			}
 			
-			if (tempObject.getId() == ID.Bullet) {
+			if (tempObject.getId() == ID.Bullet || tempObject.getId() == ID.IBullet) {
 				if (getBounds().intersects(tempObject.getBounds())) {
 					hp -= 50;
 					handler.removeObject(tempObject);

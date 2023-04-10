@@ -29,7 +29,7 @@ public class AutoGun extends GameObject {
 		this.cam = cam;
 		this.ss = ss;
 		this.lastTime = System.nanoTime();
-		this.autoGunLvl = 1;
+		this.autoGunLvl = 0;
 		this.delta = 0;
 		this.secondaryShooting = false;
 		this.tertiaryShooting = false;

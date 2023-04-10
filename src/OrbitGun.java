@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 public class OrbitGun extends GameObject {
 	
@@ -18,8 +19,10 @@ public class OrbitGun extends GameObject {
 	
 	private float centerX;
 	private float centerY;
-	private GameObject tempBullet;
-	
+	private GameObject bullet;
+	ArrayList<GameObject> bullets;
+	private int numberOfBullets;
+	private int counter;
 	
 
 	public OrbitGun(float x, float y, ID id, Handler handler, SpriteSheet ss, Game game, Camera cam) {
@@ -30,12 +33,24 @@ public class OrbitGun extends GameObject {
 		this.ss = ss;
 		this.orbitGunLvl = 1;
 		this.findPlayer();
-		this.angle = 0;
+		this.angle = 0d;
 		this.radius = 150;
 		this.speed = 0.015f;
-		this.centerX = (float) (this.tempPlayer.getX() + (Math.cos(angle) * this.radius));
-		this.centerY = (float) (this.tempPlayer.getY() + (Math.sin(angle) * this.radius));
-		this.tempBullet = handler.addObject(new Bullet(this.centerX, this.centerY, ID.Bullet, handler, ss));
+		this.bullets = new ArrayList<>();
+		this.numberOfBullets = 0;
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		this.addBullet();
+		
 	}
 	
 	
@@ -48,22 +63,37 @@ public class OrbitGun extends GameObject {
 		}
 	}
 	
+	public void addBullet() {
+		this.bullet = handler.addObject(new Bullet(this.getXPos(angle), this.getYPos(angle), ID.IBullet, handler, ss));
+		this.bullets.add(this.bullet);
+		this.numberOfBullets++;
+	}
+	
 
 	@Override
 	public void tick() {
-//		System.out.println(this.tempBullet);
-		if (this.tempBullet == null) {
-			this.tempBullet = handler.addObject(new Bullet(this.centerX, this.centerY, ID.Bullet, handler, ss));
-		}
-		
-		
 		this.angle += this.speed;
-		this.centerX = (float) (this.tempPlayer.getX() + (Math.cos(angle) * this.radius));
-		this.centerY = (float) (this.tempPlayer.getY() + (Math.sin(angle) * this.radius));
-		this.tempBullet.setX(this.centerX);
-		this.tempBullet.setY(this.centerY);	
+		
+		double angleDifference = 6.28319 / this.numberOfBullets; // 360 in radianti = 6.28319
+		this.counter = 0; // TODO: trovare un modo migliore
+		
+		this.bullets.forEach( b -> {
+			double angle2 = this.angle + (angleDifference * this.counter);
+			b.setX(this.getXPos(angle2));
+			b.setY(this.getYPos(angle2));
+			this.counter++;
+		});
 		
 		
+	}
+	
+	// Math.sin e cos funzionano in radianti
+	public float getXPos(double angle) {
+		return (float) (16 + this.tempPlayer.getX() + (Math.cos(angle) * this.radius));
+	}
+	
+	public float getYPos(double angle) {
+		return (float) (16 + this.tempPlayer.getY() + (Math.sin(angle) * this.radius));
 	}
 
 	@Override
